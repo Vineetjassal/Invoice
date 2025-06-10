@@ -23,7 +23,7 @@ const DateInput = ({ label, variableName }: CustomNumberProps) => {
   return (
     <Controller
       render={({ field: { onChange, value } }) => (
-        <div className="flex group items-center  relative h-[52px]">
+        <div className="flex group items-center relative h-[52px]">
           <Popover onOpenChange={setOpen} open={open}>
             <PopoverTrigger asChild className="w-full">
               <button className="flex gap-2 items-center justify-between w-full">
@@ -35,7 +35,7 @@ const DateInput = ({ label, variableName }: CustomNumberProps) => {
                 </label>
                 <div className="flex gap-2 items-center text-sm">
                   {value ? format(value, "PPP") : <span>Pick a date</span>}
-                  <CalendarIcon className="h-4 w-4" />
+                  <CalendarIcon className="h-4 w-4 text-blue-600" />
                 </div>
               </button>
             </PopoverTrigger>
@@ -55,8 +55,8 @@ const DateInput = ({ label, variableName }: CustomNumberProps) => {
             </PopoverContent>
           </Popover>
           <div
-            className={`absolute border-dashed inset-x-0 bottom-0 border-t border-gray-300  group-focus:border-t ${
-              open ? "border-orange-500" : "group-hover:border-neutral-400"
+            className={`absolute border-dashed inset-x-0 bottom-0 border-t border-gray-300 group-focus:border-t ${
+              open ? "border-blue-500" : "group-hover:border-neutral-400"
             }`}
             aria-hidden="true"
           />

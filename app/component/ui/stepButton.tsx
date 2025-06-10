@@ -14,17 +14,17 @@ const StepButton = ({ isPrevious, title, step }: StepButtonProps) => (
       <div className="mt-3 w-full flex">
         {isPrevious ? (
           <button
-            className="flex-1  hover:bg-neutral-100 rounded-md p-3"
+            className="flex-1 hover:bg-blue-50 rounded-md p-3 transition-colors"
             onClick={() => {
               localStorage.setItem("step", step);
               onChange(step);
             }}
           >
-            <div className="flex gap-2  items-center">
+            <div className="flex gap-2 items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
-                className="w-3 h-3 text-neutral-500"
+                className="w-3 h-3 text-blue-600"
                 fill="currentColor"
               >
                 <path
@@ -33,9 +33,9 @@ const StepButton = ({ isPrevious, title, step }: StepButtonProps) => (
                   clipRule="evenodd"
                 />
               </svg>
-              <p className="text-sm font-medium text-neutral-500 ">Back </p>
+              <p className="text-sm font-medium text-blue-600">Back</p>
             </div>
-            <p className="font-medium text-left">{title}</p>
+            <p className="font-medium text-left text-gray-900">{title}</p>
           </button>
         ) : (
           <button
@@ -43,15 +43,15 @@ const StepButton = ({ isPrevious, title, step }: StepButtonProps) => (
               localStorage.setItem("step", step);
               onChange(step);
             }}
-            className="flex-1  hover:bg-neutral-100 rounded-md p-3"
+            className="flex-1 hover:bg-blue-50 rounded-md p-3 transition-colors"
           >
             <div className="flex gap-2 justify-end items-center">
-              <p className="text-sm font-medium text-neutral-500 ">Next </p>
+              <p className="text-sm font-medium text-blue-600">Next</p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="w-3 h-3 text-neutral-500"
+                className="w-3 h-3 text-blue-600"
               >
                 <path
                   fillRule="evenodd"
@@ -60,7 +60,7 @@ const StepButton = ({ isPrevious, title, step }: StepButtonProps) => (
                 />
               </svg>
             </div>
-            <p className="font-medium text-right">{title}</p>
+            <p className="font-medium text-right text-gray-900">{title}</p>
           </button>
         )}
       </div>

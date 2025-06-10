@@ -7,7 +7,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, label, ...props }, ref) => (
     <div
-      className={`flex  items-center relative ${
+      className={`flex items-center relative ${
         label ? "h-[52px]" : "h-[42px]"
       }`}
     >
@@ -27,10 +27,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         id={label}
         className={`peer block w-full border-0 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 ${
           label ? "text-right" : "p-0"
-        }  placeholder:text-neutral-700/40 placeholder:font-medium caret-orange-500`}
+        } placeholder:text-neutral-700/40 placeholder:font-medium caret-blue-500`}
       />
       <div
-        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-hover:border-neutral-400 peer-focus:border-t peer-focus:border-orange-500 border-dashed"
+        className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-hover:border-neutral-400 peer-focus:border-t peer-focus:border-blue-500 border-dashed"
         aria-hidden="true"
       />
     </div>
