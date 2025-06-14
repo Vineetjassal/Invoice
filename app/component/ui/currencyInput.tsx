@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { currencyList } from "@/lib/currency";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { getInitialValue } from "@/lib/getInitialValue";
@@ -30,28 +30,29 @@ const CurrencyInput = () => {
         )?.details;
 
         return (
-          <div className="flex group items-center relative h-[52px]">
+          <div className="flex group items-center relative h-[60px]">
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild className="w-full">
-                <button className="flex gap-2 items-center justify-between w-full">
-                  <label className="block text-sm font-medium leading-6 text-gray-900 whitespace-nowrap">
+                <button className="flex gap-2 items-center justify-between w-full py-3 focus:outline-none">
+                  <label className="block text-sm font-semibold leading-6 text-gray-700 whitespace-nowrap">
                     Currency
                   </label>
-                  <div className="flex gap-1.5 bg-blue-50 text-sm pl-2 pr-2.5 rounded-full py-0.5 items-center border border-blue-200">
+                  <div className="flex gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-sm px-3 py-2 rounded-xl items-center border border-blue-200 hover:border-blue-300 transition-colors">
                     {currencyDetails && (
-                      <currencyDetails.icon className="w-4 h-4 rounded-full" />
+                      <currencyDetails.icon className="w-5 h-5 rounded-full" />
                     )}
-                    <p className="font-medium text-sm text-blue-700">
+                    <span className="font-semibold text-blue-700">
                       {currencyDetails?.currencyShortForm}
-                    </p>
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-blue-600 transition-transform ${open ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-full p-0 PopoverContent mt-3">
+              <PopoverContent className="w-full p-0 PopoverContent mt-2 border-blue-200 shadow-xl">
                 <Command className="w-full">
                   <CommandInput
                     placeholder="Search currency..."
-                    className="peer block w-full border-0 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 placeholder:text-neutral-700/40 placeholder:font-medium caret-blue-500"
+                    className="peer block w-full border-0 py-3 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 placeholder:text-gray-400 placeholder:font-medium caret-blue-500"
                   />
                   <CommandEmpty>No currency found.</CommandEmpty>
                   <CommandGroup className="max-h-96 overflow-y-auto scrollbar-hide">
@@ -66,25 +67,27 @@ const CurrencyInput = () => {
                           onChange(updatedValue);
                           setOpen(false);
                         }}
-                        className="w-full cursor-pointer my-2"
+                        className="w-full cursor-pointer my-1 rounded-lg hover:bg-blue-50"
                       >
-                        <div className="flex gap-2 justify-between items-center w-full">
-                          <div className="flex gap-2 items-center">
-                            <currency.details.icon className="w-6 h-6 rounded-full border" />
-                            <p className="font-medium">
-                              {currency.details.currencyName}
-                            </p>
-                            <p className="font-medium text-neutral-500">
-                              {currency.details.currencyShortForm}
-                            </p>
+                        <div className="flex gap-3 justify-between items-center w-full">
+                          <div className="flex gap-3 items-center">
+                            <currency.details.icon className="w-7 h-7 rounded-full border-2 border-gray-200" />
+                            <div>
+                              <p className="font-semibold text-gray-900">
+                                {currency.details.currencyName}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {currency.details.currencyShortForm}
+                              </p>
+                            </div>
                           </div>
                           <CheckCircle2
                             className={cn(
-                              "h-6 w-6 rounded-full",
+                              "h-6 w-6 rounded-full transition-all",
                               value.toLowerCase() ===
                                 currency.value.toLowerCase()
-                                ? "opacity-100 bg-blue-500 text-white"
-                                : "opacity-0"
+                                ? "opacity-100 bg-blue-500 text-white scale-110"
+                                : "opacity-0 scale-90"
                             )}
                           />
                         </div>
@@ -95,8 +98,8 @@ const CurrencyInput = () => {
               </PopoverContent>
             </Popover>
             <div
-              className={`absolute inset-x-0 bottom-0 border-t border-gray-300 group-focus:border-t border-dashed ${
-                open ? "border-blue-500" : "group-hover:border-neutral-400"
+              className={`absolute inset-x-0 bottom-0 border-t-2 border-gray-200 transition-colors duration-200 ${
+                open ? "border-blue-500" : "group-hover:border-blue-300"
               }`}
               aria-hidden="true"
             />

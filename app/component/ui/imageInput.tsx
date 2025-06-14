@@ -2,7 +2,7 @@
 "use client";
 
 import { getInitialValue } from "@/lib/getInitialValue";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { useRef } from "react";
 import { Controller } from "react-hook-form";
 
@@ -28,27 +28,31 @@ export const ImageInput = ({ label, variableName }: CustomNumberProps) => {
     <Controller
       render={({ field: { onChange, value } }) => (
         <div
-          className="flex items-center relative justify-between h-[52px] cursor-pointer"
+          className="flex items-center relative justify-between h-[60px] cursor-pointer group"
           onClick={handleButtonClick}
         >
           {label && (
             <label
               htmlFor={label}
-              className="block text-sm font-medium leading-6 text-gray-900 whitespace-nowrap"
+              className="block text-sm font-semibold leading-6 text-gray-700 whitespace-nowrap"
             >
               {label}
             </label>
           )}
           {value ? (
-            <img
-              src={value}
-              className="h-8 mr-3 rounded-md p-1 hover:bg-neutral-200"
-              alt="company logo"
-            />
+            <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-2 rounded-xl border border-blue-200 hover:border-blue-300 transition-colors">
+              <img
+                src={value}
+                className="h-8 w-8 rounded-lg object-cover"
+                alt="uploaded logo"
+              />
+              <span className="text-sm font-semibold text-blue-700">Logo uploaded</span>
+            </div>
           ) : (
-            <button className="text-neutral-500/70 border rounded-full p-1.5 border-dashed">
-              <Plus className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2 text-gray-500 bg-gray-50 hover:bg-blue-50 px-3 py-2 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-300 transition-all group-hover:text-blue-600">
+              <Upload className="w-4 h-4" />
+              <span className="text-sm font-medium">Upload logo</span>
+            </div>
           )}
           <input
             accept=".png, .jpg, .jpeg, .svg, .svg+xml"
@@ -66,12 +70,10 @@ export const ImageInput = ({ label, variableName }: CustomNumberProps) => {
                 reader.readAsDataURL(file);
               }
             }}
-            className={`peer w-full border-0 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 hidden ${
-              label ? "text-right" : "p-0"
-            }  placeholder:text-neutral-700/40 placeholder:font-medium caret-orange-500`}
+            className="hidden"
           />
           <div
-            className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-hover:border-neutral-400 peer-focus:border-t peer-focus:border-orange-500 border-dashed"
+            className="absolute inset-x-0 bottom-0 border-t-2 border-gray-200 peer-hover:border-blue-300 peer-focus:border-blue-500 group-hover:border-blue-300 transition-colors duration-200"
             aria-hidden="true"
           />
         </div>
