@@ -33,15 +33,15 @@ const DateInput = ({ label, variableName }: CustomNumberProps) => {
                 >
                   {label}
                 </label>
-                <div className="flex gap-2 items-center text-sm bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-2 rounded-xl border border-blue-200 hover:border-blue-300 transition-colors">
-                  <span className="font-semibold text-blue-700">
+                <div className="flex gap-2 items-center text-sm bg-gradient-to-r from-gray-50 to-slate-50 px-3 py-2 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors">
+                  <span className="font-semibold text-gray-700">
                     {value ? format(value, "MMM dd, yyyy") : "Pick a date"}
                   </span>
-                  <CalendarIcon className="h-4 w-4 text-blue-600" />
+                  <CalendarIcon className="h-4 w-4 text-gray-600" />
                 </div>
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 mt-2 border-blue-200 shadow-xl" align="end">
+            <PopoverContent className="w-auto p-0 mt-2 border-gray-200 shadow-xl" align="end">
               <Calendar
                 mode="single"
                 selected={new Date(value)}
@@ -59,7 +59,7 @@ const DateInput = ({ label, variableName }: CustomNumberProps) => {
           </Popover>
           <div
             className={`absolute inset-x-0 bottom-0 border-t-2 border-gray-200 transition-colors duration-200 ${
-              open ? "border-blue-500" : "group-hover:border-blue-300"
+              open ? "border-gray-500" : "group-hover:border-gray-300"
             }`}
             aria-hidden="true"
           />

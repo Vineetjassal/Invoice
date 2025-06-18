@@ -40,16 +40,16 @@ export const ImageInput = ({ label, variableName }: CustomNumberProps) => {
             </label>
           )}
           {value ? (
-            <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-2 rounded-xl border border-blue-200 hover:border-blue-300 transition-colors">
+            <div className="flex items-center gap-3 bg-gradient-to-r from-gray-50 to-slate-50 px-3 py-2 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors">
               <img
                 src={value}
                 className="h-8 w-8 rounded-lg object-cover"
                 alt="uploaded logo"
               />
-              <span className="text-sm font-semibold text-blue-700">Logo uploaded</span>
+              <span className="text-sm font-semibold text-gray-700">Logo uploaded</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-gray-500 bg-gray-50 hover:bg-blue-50 px-3 py-2 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-300 transition-all group-hover:text-blue-600">
+            <div className="flex items-center gap-2 text-gray-500 bg-gray-50 hover:bg-slate-50 px-3 py-2 rounded-xl border-2 border-dashed border-gray-300 hover:border-gray-300 transition-all group-hover:text-gray-600">
               <Upload className="w-4 h-4" />
               <span className="text-sm font-medium">Upload logo</span>
             </div>
@@ -73,7 +73,7 @@ export const ImageInput = ({ label, variableName }: CustomNumberProps) => {
             className="hidden"
           />
           <div
-            className="absolute inset-x-0 bottom-0 border-t-2 border-gray-200 peer-hover:border-blue-300 peer-focus:border-blue-500 group-hover:border-blue-300 transition-colors duration-200"
+            className="absolute inset-x-0 bottom-0 border-t-2 border-gray-200 peer-hover:border-gray-300 peer-focus:border-gray-500 group-hover:border-gray-300 transition-colors duration-200"
             aria-hidden="true"
           />
         </div>

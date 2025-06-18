@@ -37,8 +37,8 @@ export const DownloadInvoiceButton = () => {
       <div className="text-center max-w-2xl mx-auto px-6">
         {/* Success Icon */}
         <div className="relative mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur-2xl opacity-20"></div>
-          <div className="relative w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full blur-2xl opacity-20"></div>
+          <div className="relative w-24 h-24 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full flex items-center justify-center mx-auto">
             <FileText className="w-12 h-12 text-white" />
           </div>
         </div>
@@ -51,7 +51,7 @@ export const DownloadInvoiceButton = () => {
           
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Your Professional Invoice
-            <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
               is Ready!
             </span>
           </h1>
@@ -112,7 +112,7 @@ export const DownloadInvoiceButton = () => {
               }
             }}
             type="button"
-            className="w-full max-w-md h-14 rounded-xl text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl"
+            className="w-full max-w-md h-14 rounded-xl text-lg font-bold bg-gradient-to-r from-gray-800 to-slate-700 hover:from-gray-900 hover:to-slate-800 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl"
           >
             {status === "not-downloaded" && (
               <>

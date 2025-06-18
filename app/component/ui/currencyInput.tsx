@@ -37,22 +37,22 @@ const CurrencyInput = () => {
                   <label className="block text-sm font-semibold leading-6 text-gray-700 whitespace-nowrap">
                     Currency
                   </label>
-                  <div className="flex gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-sm px-3 py-2 rounded-xl items-center border border-blue-200 hover:border-blue-300 transition-colors">
+                  <div className="flex gap-2 bg-gradient-to-r from-gray-50 to-slate-50 text-sm px-3 py-2 rounded-xl items-center border border-gray-200 hover:border-gray-300 transition-colors">
                     {currencyDetails && (
                       <currencyDetails.icon className="w-5 h-5 rounded-full" />
                     )}
-                    <span className="font-semibold text-blue-700">
+                    <span className="font-semibold text-gray-700">
                       {currencyDetails?.currencyShortForm}
                     </span>
-                    <ChevronDown className={`w-4 h-4 text-blue-600 transition-transform ${open ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${open ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-full p-0 PopoverContent mt-2 border-blue-200 shadow-xl">
+              <PopoverContent className="w-full p-0 PopoverContent mt-2 border-gray-200 shadow-xl">
                 <Command className="w-full">
                   <CommandInput
                     placeholder="Search currency..."
-                    className="peer block w-full border-0 py-3 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 placeholder:text-gray-400 placeholder:font-medium caret-blue-500"
+                    className="peer block w-full border-0 py-3 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 placeholder:text-gray-400 placeholder:font-medium caret-gray-500"
                   />
                   <CommandEmpty>No currency found.</CommandEmpty>
                   <CommandGroup className="max-h-96 overflow-y-auto scrollbar-hide">
@@ -67,7 +67,7 @@ const CurrencyInput = () => {
                           onChange(updatedValue);
                           setOpen(false);
                         }}
-                        className="w-full cursor-pointer my-1 rounded-lg hover:bg-blue-50"
+                        className="w-full cursor-pointer my-1 rounded-lg hover:bg-gray-50"
                       >
                         <div className="flex gap-3 justify-between items-center w-full">
                           <div className="flex gap-3 items-center">
@@ -86,7 +86,7 @@ const CurrencyInput = () => {
                               "h-6 w-6 rounded-full transition-all",
                               value.toLowerCase() ===
                                 currency.value.toLowerCase()
-                                ? "opacity-100 bg-blue-500 text-white scale-110"
+                                ? "opacity-100 bg-gray-700 text-white scale-110"
                                 : "opacity-0 scale-90"
                             )}
                           />
@@ -99,7 +99,7 @@ const CurrencyInput = () => {
             </Popover>
             <div
               className={`absolute inset-x-0 bottom-0 border-t-2 border-gray-200 transition-colors duration-200 ${
-                open ? "border-blue-500" : "group-hover:border-blue-300"
+                open ? "border-gray-500" : "group-hover:border-gray-300"
               }`}
               aria-hidden="true"
             />
