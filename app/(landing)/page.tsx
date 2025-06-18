@@ -24,44 +24,63 @@ import DemoPreview from "./components/demoPreview";
 const Home = () => {
   return (
     <div className="bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 min-h-screen">
-      {/* Navigation */}
-      <nav className="relative z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+      {/* Floating Navigation */}
+      <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="flex justify-between items-center py-4 px-6">
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-gray-800/20 rounded-xl blur-lg"></div>
                 <Image
                   src="/receipt copy.png"
-                  width={48}
-                  height={48}
+                  width={40}
+                  height={40}
                   className="relative rounded-xl shadow-lg"
                   alt="Invoice Generator Logo"
                 />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
-                  InvoiceFloww
+                <h1 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
+                  InvoiceFlow
                 </h1>
-                <p className="text-sm text-gray-600">Professional & Free</p>
+                <p className="text-xs text-gray-600">Professional & Free</p>
               </div>
             </div>
             
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">
-                Features
+            <div className="hidden md:flex items-center space-x-6">
+              <a 
+                href="https://twitter.com/vineetjassal" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-gray-800 transition-colors font-medium flex items-center space-x-2 group"
+              >
+                <svg 
+                  className="w-5 h-5 group-hover:scale-110 transition-transform" 
+                  fill="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span>Twitter</span>
               </a>
-              <a href="#demo" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">
-                Demo
-              </a>
-              <a href="#pricing" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">
-                Pricing
-              </a>
+              
               <Link
                 href="/new"
-                className="bg-gradient-to-r from-gray-800 to-slate-700 text-white px-6 py-2.5 rounded-xl font-semibold hover:from-gray-900 hover:to-slate-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-gray-800 to-slate-700 text-white px-6 py-2.5 rounded-xl font-semibold hover:from-gray-900 hover:to-slate-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center space-x-2 group"
               >
-                Get Started
+                <span>Get Started</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Link
+                href="/new"
+                className="bg-gradient-to-r from-gray-800 to-slate-700 text-white px-4 py-2 rounded-lg font-semibold hover:from-gray-900 hover:to-slate-800 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center space-x-1"
+              >
+                <span className="text-sm">Start</span>
+                <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
           </div>
@@ -69,7 +88,7 @@ const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-32">
+      <section className="relative overflow-hidden pt-32 pb-32">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-gray-800/5 to-slate-700/5"></div>
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-gray-400/10 rounded-full blur-3xl"></div>
@@ -262,7 +281,7 @@ const Home = () => {
             <span className="block">Invoicing Process?</span>
           </h2>
           <p className="text-xl text-gray-100 mb-12 max-w-2xl mx-auto">
-            Join thousands of professionals who've streamlined their billing and improved their cash flow with InvoiceFloww.
+            Join thousands of professionals who've streamlined their billing and improved their cash flow with InvoiceFlow.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -288,7 +307,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-gray-400">
-              © 2024 InvoiceFloww. All rights reserved.
+              © 2024 InvoiceFlow. All rights reserved.
             </p>
           </div>
         </div>
