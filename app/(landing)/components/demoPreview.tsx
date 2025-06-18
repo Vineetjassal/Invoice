@@ -19,7 +19,7 @@ const defaultValue = {
     companyCity: "Mountain View",
     companyState: "CA",
     companyCountry: "USA",
-    companyLogo: "/receipt-logo.png",
+    companyLogo: "/vineet.jpeg",
     companyTaxId: "",
     companyZip: "94043",
     email: "support@apple.com",
