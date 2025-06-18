@@ -108,7 +108,7 @@ const Home = () => {
               
               <a
                 target="_blank"
-                href="https://github.com/pranavp10/invoice-generator"
+                href="https://github.com/Vineetjassal/Invoice"
                 className="inline-flex items-center justify-center px-10 py-5 text-xl font-bold text-gray-700 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-300 hover:text-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <svg
