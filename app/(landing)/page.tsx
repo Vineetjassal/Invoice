@@ -41,7 +41,7 @@ const Home = () => {
               </div>
               <div>
                 <h1 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
-                  InvoiceFlow
+                  InvoiceFloww
                 </h1>
                 <p className="text-xs text-gray-600">Professional & Free</p>
               </div>
@@ -281,7 +281,7 @@ const Home = () => {
             <span className="block">Invoicing Process?</span>
           </h2>
           <p className="text-xl text-gray-100 mb-12 max-w-2xl mx-auto">
-            Join thousands of professionals who've streamlined their billing and improved their cash flow with InvoiceFlow.
+            Join thousands of professionals who've streamlined their billing and improved their cash flow with InvoiceFloww.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -307,7 +307,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-gray-400">
-              © 2024 InvoiceFlow. All rights reserved.
+              © 2024 InvoiceFloww. All rights reserved.
             </p>
           </div>
         </div>
