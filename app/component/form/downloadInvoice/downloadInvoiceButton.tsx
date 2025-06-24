@@ -139,7 +139,7 @@ export const DownloadInvoiceButton = () => {
             </span>
           </h1>
           
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-md text-gray-600 leading-relaxed">
             Your beautifully crafted invoice has been generated successfully. 
             Review the details and download your professional PDF invoice.
           </p>
