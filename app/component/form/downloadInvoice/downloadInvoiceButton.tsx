@@ -12,6 +12,21 @@ import { svgToDataUri } from "@/lib/svgToDataUri";
 import { useEffect, useState } from "react";
 import { currencyList } from "@/lib/currency";
 
+// Register fonts before component
+Font.register({
+  family: "Helvetica",
+  fonts: [
+    {
+      src: "https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.woff2",
+      fontWeight: "normal",
+    },
+    {
+      src: "https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4gaVc.woff2",
+      fontWeight: "bold",
+    },
+  ],
+});
+
 export const DownloadInvoiceButton = () => {
   const [status, setStatus] = useState<
     "downloaded" | "downloading" | "not-downloaded"
@@ -31,6 +46,74 @@ export const DownloadInvoiceButton = () => {
       }, 2000);
     }
   }, [status]);
+
+  const generatePDF = async () => {
+    try {
+      setStatus("downloading");
+      
+      // Get currency details
+      const currencyDetails = currencyList.find(
+        (currencyDetail) =>
+          currencyDetail.value.toLowerCase() ===
+          (invoiceDetails.currency || "INR").toLowerCase()
+      )?.details;
+
+      const defaultCurrency = currencyList.find(
+        (currencyDetail) =>
+          currencyDetail.value.toLowerCase() === "INR".toLowerCase()
+      )?.details;
+
+      // Get flag SVG
+      let countryImageUrl = "";
+      try {
+        const flagResponse = await fetch(
+          `/flag/1x1/${
+            currencyDetails?.iconName || defaultCurrency?.iconName || "IN"
+          }.svg`
+        );
+        
+        if (flagResponse.ok) {
+          const svgFlag = await flagResponse.text();
+          countryImageUrl = await svgToDataUri(svgFlag) || "";
+        }
+      } catch (flagError) {
+        console.warn("Could not load flag, proceeding without it:", flagError);
+      }
+
+      // Generate PDF
+      const MyDocument = () => (
+        <Document>
+          <Page size="A4" style={pdfContainers.page}>
+            <PdfDetails
+              companyDetails={companyDetails}
+              invoiceDetails={invoiceDetails}
+              invoiceTerms={invoiceTerms}
+              paymentDetails={paymentDetails}
+              yourDetails={yourDetails}
+              countryImageUrl={countryImageUrl}
+            />
+          </Page>
+        </Document>
+      );
+
+      const blob = await pdf(<MyDocument />).toBlob();
+      
+      // Generate filename with invoice number or timestamp
+      const invoiceNumber = invoiceTerms.invoiceNumber || "invoice";
+      const timestamp = new Date().toISOString().split('T')[0];
+      const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
+      
+      saveAs(blob, filename);
+      setStatus("downloaded");
+      
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      setStatus("not-downloaded");
+      
+      // Show user-friendly error message
+      alert("There was an error generating the PDF. Please check that all required fields are filled and try again.");
+    }
+  };
 
   return (
     <div className="flex h-[calc(100vh-208px)] justify-center items-center">
@@ -65,52 +148,7 @@ export const DownloadInvoiceButton = () => {
         <div className="space-y-4">
           <Button
             disabled={status === "downloading"}
-            onClick={async () => {
-              try {
-                setStatus("downloading");
-                const currencyDetails = currencyList.find(
-                  (currencyDetail) =>
-                    currencyDetail.value.toLowerCase() ===
-                    invoiceDetails.currency.toLowerCase()
-                )?.details;
-
-                const defaultCurrency = currencyList.find(
-                  (currencyDetail) =>
-                    currencyDetail.value.toLowerCase() === "INR".toLowerCase()
-                )?.details;
-
-                const data = await fetch(
-                  `/flag/1x1/${
-                    currencyDetails?.iconName || defaultCurrency?.iconName
-                  }.svg`
-                );
-                const svgFlag = await data.text();
-                const countryImageUrl = await svgToDataUri(svgFlag);
-                if (countryImageUrl) {
-                  const blob = await pdf(
-                    <Document>
-                      <Page size="A4" style={pdfContainers.page}>
-                        <PdfDetails
-                          companyDetails={companyDetails}
-                          invoiceDetails={invoiceDetails}
-                          invoiceTerms={invoiceTerms}
-                          paymentDetails={paymentDetails}
-                          yourDetails={yourDetails}
-                          countryImageUrl={countryImageUrl}
-                        />
-                      </Page>
-                    </Document>
-                  ).toBlob();
-                  saveAs(blob, "invoice.pdf");
-                  setStatus("downloaded");
-                } else {
-                  setStatus("not-downloaded");
-                }
-              } catch (e) {
-                console.error(e);
-                setStatus("not-downloaded");
-              }
-            }}
+            onClick={generatePDF}
             type="button"
             className="w-full max-w-md h-14 rounded-xl text-lg font-bold bg-gradient-to-r from-gray-800 to-slate-700 hover:from-gray-900 hover:to-slate-800 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl"
           >
@@ -142,41 +180,3 @@ export const DownloadInvoiceButton = () => {
     </div>
   );
 };
-
-Font.register({
-  family: "Geist",
-  fonts: [
-    {
-      src: "/font/Geist-Thin.ttf",
-      fontWeight: "thin",
-    },
-    {
-      src: "/font/Geist-Ultralight.ttf",
-      fontWeight: "ultralight",
-    },
-    {
-      src: "/font/Geist-Light.ttf",
-      fontWeight: "light",
-    },
-    {
-      src: "/font/Geist-Regular.ttf",
-      fontWeight: "normal",
-    },
-    {
-      src: "/font/Geist-Medium.ttf",
-      fontWeight: "medium",
-    },
-    {
-      src: "/font/Geist-SemiBold.ttf",
-      fontWeight: "semibold",
-    },
-    {
-      src: "/font/Geist-Bold.ttf",
-      fontWeight: "bold",
-    },
-    {
-      src: "/font/Geist-UltraBlack.ttf",
-      fontWeight: "ultrabold",
-    },
-  ],
-});

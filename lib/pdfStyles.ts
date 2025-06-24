@@ -11,40 +11,46 @@ const colors = {
 export const pdfTypography = StyleSheet.create({
     title: {
         fontSize: 11,
-        fontWeight: "semibold",
+        fontWeight: "bold",
         textTransform: "uppercase",
-        color: colors.gray400
+        color: colors.gray400,
+        fontFamily: "Helvetica"
     },
     subTitle: {
         fontSize: 12,
-        fontWeight: "medium",
+        fontWeight: "bold",
+        fontFamily: "Helvetica"
     },
     text2xl: {
         fontSize: 24,
-        fontWeight: 'medium'
+        fontWeight: 'bold',
+        fontFamily: "Helvetica"
     },
     description: {
         color: colors['gray550/900'],
-        fontSize: 12
+        fontSize: 12,
+        fontFamily: "Helvetica"
     },
     itemDescription: {
         color: colors.gray600,
         fontSize: 12,
-        fontWeight: "medium",
-        flexWrap: 'wrap'
+        fontWeight: "normal",
+        flexWrap: 'wrap',
+        fontFamily: "Helvetica"
     },
     amount: {
         fontSize: 16,
-        fontWeight: "medium",
-        flexWrap: 'wrap'
+        fontWeight: "bold",
+        flexWrap: 'wrap',
+        fontFamily: "Helvetica"
     },
     paymentTitle: {
         fontSize: 12,
-        fontWeight: "medium",
+        fontWeight: "normal",
         flexWrap: 'wrap',
-        color: colors.gray500
+        color: colors.gray500,
+        fontFamily: "Helvetica"
     }
-
 })
 
 export const pdfUtils = StyleSheet.create({
@@ -79,7 +85,8 @@ export const pdfUtils = StyleSheet.create({
 
 export const pdfContainers = StyleSheet.create({
     page: {
-        fontFamily: "Geist",
+        fontFamily: "Helvetica",
+        padding: 20,
     },
     invoiceTerms: {
         paddingHorizontal: 40,
@@ -107,5 +114,3 @@ export const pdfContainers = StyleSheet.create({
         marginBottom: 12,
     }
 })
-
-
