@@ -17,7 +17,7 @@ import { currencyList } from "@/lib/currency";
 import { svgToDataUri } from "@/lib/svgToDataUri";
 import { pdfContainers } from "@/lib/pdfStyles";
 
-// Register custom font
+// Register fonts
 Font.register({
   family: "Helvetica",
   fonts: [
@@ -38,12 +38,12 @@ export const DownloadInvoiceButton = () => {
   >("not-downloaded");
 
   const {
-    companyDetails,
-    invoiceDetails,
-    invoiceTerms,
-    paymentDetails,
-    yourDetails,
-  } = useData();
+    companyDetails = {},
+    invoiceDetails = {},
+    invoiceTerms = {},
+    paymentDetails = {},
+    yourDetails = {},
+  } = useData() || {};
 
   useEffect(() => {
     if (status === "downloaded") {
@@ -56,17 +56,18 @@ export const DownloadInvoiceButton = () => {
     try {
       setStatus("downloading");
 
-      const selectedCurrency = invoiceDetails.currency || "INR";
+      const selectedCurrency = (invoiceDetails.currency || "INR").toLowerCase();
       const currencyDetails =
-        currencyList.find(
-          (c) => c.value.toLowerCase() === selectedCurrency.toLowerCase()
-        )?.details ||
+        currencyList.find((c) => c.value.toLowerCase() === selectedCurrency)
+          ?.details ||
         currencyList.find((c) => c.value === "INR")?.details;
 
       let countryImageUrl = "";
 
       try {
-        const flagRes = await fetch(`/flag/1x1/${currencyDetails?.iconName || "in"}.svg`);
+        const flagRes = await fetch(
+          `/flag/1x1/${currencyDetails?.iconName || "in"}.svg`
+        );
         if (flagRes.ok) {
           const svgFlag = await flagRes.text();
           countryImageUrl = await svgToDataUri(svgFlag);
@@ -75,23 +76,24 @@ export const DownloadInvoiceButton = () => {
         console.warn("Flag image fetch failed:", err);
       }
 
-      const MyDocument = () => (
-        <Document>
-          <Page size="A4" style={pdfContainers.page}>
-            <PdfDetails
-              companyDetails={companyDetails}
-              invoiceDetails={invoiceDetails}
-              invoiceTerms={invoiceTerms}
-              paymentDetails={paymentDetails}
-              yourDetails={yourDetails}
-              countryImageUrl={countryImageUrl}
-            />
-          </Page>
-        </Document>
+      const SafePdfDetails = () => (
+        <PdfDetails
+          companyDetails={companyDetails || {}}
+          invoiceDetails={invoiceDetails || {}}
+          invoiceTerms={invoiceTerms || {}}
+          paymentDetails={paymentDetails || {}}
+          yourDetails={yourDetails || {}}
+          countryImageUrl={countryImageUrl || ""}
+        />
       );
 
-      const blob = await pdf(<MyDocument />).toBlob();
-      if (!blob) throw new Error("Failed to generate PDF blob");
+      const blob = await pdf(
+        <Document>
+          <Page size="A4" style={pdfContainers.page}>
+            <SafePdfDetails />
+          </Page>
+        </Document>
+      ).toBlob();
 
       const invoiceNumber = invoiceTerms.invoiceNumber || "invoice";
       const timestamp = new Date().toISOString().split("T")[0];
@@ -102,7 +104,7 @@ export const DownloadInvoiceButton = () => {
     } catch (error) {
       console.error("PDF generation failed:", error);
       alert(
-        "Error generating PDF. Please check all required fields and try again."
+        "Something went wrong while generating your invoice. Please try again."
       );
       setStatus("not-downloaded");
     }
