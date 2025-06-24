@@ -121,7 +121,7 @@ export const DownloadInvoiceButton = () => {
         {/* Success Icon */}
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full blur-2xl opacity-20"></div>
-          <div className="relative w-24 h-24 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full flex items-center justify-center mx-auto">
+          <div className="relative mt-4 w-24 h-24 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full flex items-center justify-center mx-auto">
             <FileText className="w-12 h-12 text-white" />
           </div>
         </div>
