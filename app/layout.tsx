@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     },
   },
   title:
-    "Free Invoice Generator: Create & Send Professional Invoices in Minutes",
+    "InvoiceFlowww: Free Invoice Generator",
   description:
     "Get paid on time with our free invoice maker. Create professional invoices & get them to clients instantly.",
   keywords: [
