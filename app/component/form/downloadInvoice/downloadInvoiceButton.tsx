@@ -1,18 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Document, Font, Page } from "@react-pdf/renderer";
-import { CheckCircle2, Download, LoaderIcon, Sparkles, FileText } from "lucide-react";
-import { PdfDetails } from "../pdfDetails";
-import { useData } from "@/app/hooks/useData";
-import { pdfContainers } from "@/lib/pdfStyles";
+import { Document, Font, Page, pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
-import { pdf } from "@react-pdf/renderer";
-import { svgToDataUri } from "@/lib/svgToDataUri";
-import { useEffect, useState } from "react";
+import {
+  CheckCircle2,
+  Download,
+  LoaderIcon,
+  Sparkles,
+  FileText,
+} from "lucide-react";
+import { useData } from "@/app/hooks/useData";
+import { PdfDetails } from "../pdfDetails";
 import { currencyList } from "@/lib/currency";
+import { svgToDataUri } from "@/lib/svgToDataUri";
+import { pdfContainers } from "@/lib/pdfStyles";
 
-// Register fonts before component
+// Register custom font
 Font.register({
   family: "Helvetica",
   fonts: [
@@ -31,6 +36,7 @@ export const DownloadInvoiceButton = () => {
   const [status, setStatus] = useState<
     "downloaded" | "downloading" | "not-downloaded"
   >("not-downloaded");
+
   const {
     companyDetails,
     invoiceDetails,
@@ -41,46 +47,34 @@ export const DownloadInvoiceButton = () => {
 
   useEffect(() => {
     if (status === "downloaded") {
-      setTimeout(() => {
-        setStatus("not-downloaded");
-      }, 2000);
+      const timer = setTimeout(() => setStatus("not-downloaded"), 2000);
+      return () => clearTimeout(timer);
     }
   }, [status]);
 
   const generatePDF = async () => {
     try {
       setStatus("downloading");
-      
-      // Get currency details
-      const currencyDetails = currencyList.find(
-        (currencyDetail) =>
-          currencyDetail.value.toLowerCase() ===
-          (invoiceDetails.currency || "INR").toLowerCase()
-      )?.details;
 
-      const defaultCurrency = currencyList.find(
-        (currencyDetail) =>
-          currencyDetail.value.toLowerCase() === "INR".toLowerCase()
-      )?.details;
+      const selectedCurrency = invoiceDetails.currency || "INR";
+      const currencyDetails =
+        currencyList.find(
+          (c) => c.value.toLowerCase() === selectedCurrency.toLowerCase()
+        )?.details ||
+        currencyList.find((c) => c.value === "INR")?.details;
 
-      // Get flag SVG
       let countryImageUrl = "";
+
       try {
-        const flagResponse = await fetch(
-          `/flag/1x1/${
-            currencyDetails?.iconName || defaultCurrency?.iconName || "IN"
-          }.svg`
-        );
-        
-        if (flagResponse.ok) {
-          const svgFlag = await flagResponse.text();
-          countryImageUrl = await svgToDataUri(svgFlag) || "";
+        const flagRes = await fetch(`/flag/1x1/${currencyDetails?.iconName || "in"}.svg`);
+        if (flagRes.ok) {
+          const svgFlag = await flagRes.text();
+          countryImageUrl = await svgToDataUri(svgFlag);
         }
-      } catch (flagError) {
-        console.warn("Could not load flag, proceeding without it:", flagError);
+      } catch (err) {
+        console.warn("Flag image fetch failed:", err);
       }
 
-      // Generate PDF
       const MyDocument = () => (
         <Document>
           <Page size="A4" style={pdfContainers.page}>
@@ -97,28 +91,26 @@ export const DownloadInvoiceButton = () => {
       );
 
       const blob = await pdf(<MyDocument />).toBlob();
-      
-      // Generate filename with invoice number or timestamp
+      if (!blob) throw new Error("Failed to generate PDF blob");
+
       const invoiceNumber = invoiceTerms.invoiceNumber || "invoice";
-      const timestamp = new Date().toISOString().split('T')[0];
-      const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
-      
+      const timestamp = new Date().toISOString().split("T")[0];
+      const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, "_")}_${timestamp}.pdf`;
+
       saveAs(blob, filename);
       setStatus("downloaded");
-      
     } catch (error) {
-      console.error("PDF generation error:", error);
+      console.error("PDF generation failed:", error);
+      alert(
+        "Error generating PDF. Please check all required fields and try again."
+      );
       setStatus("not-downloaded");
-      
-      // Show user-friendly error message
-      alert("There was an error generating the PDF. Please check that all required fields are filled and try again.");
     }
   };
 
   return (
     <div className="flex h-[calc(100vh-208px)] justify-center items-center">
       <div className="text-center max-w-2xl mx-auto px-6">
-        {/* Success Icon */}
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full blur-2xl opacity-20"></div>
           <div className="relative mt-6 w-24 h-24 bg-gradient-to-r from-gray-700 to-slate-600 rounded-full flex items-center justify-center mx-auto">
@@ -131,13 +123,16 @@ export const DownloadInvoiceButton = () => {
             <Sparkles className="w-4 h-4 mr-2" />
             Invoice Ready
           </div>
-          
+
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Your Professional Invoice is Ready!
+            Your Professional Invoice{" "}
+            <span className="bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
+              is Ready!
+            </span>
           </h1>
-          
+
           <p className="text-md text-gray-600 leading-relaxed">
-            Your beautifully crafted invoice has been generated successfully. 
+            Your beautifully crafted invoice has been generated successfully.
             Review the details and download your professional PDF invoice.
           </p>
         </div>
@@ -151,7 +146,7 @@ export const DownloadInvoiceButton = () => {
           >
             {status === "not-downloaded" && (
               <>
-                <Download className="mr-3 h-6 w-6" /> 
+                <Download className="mr-3 h-6 w-6" />
                 Download Your Invoice
               </>
             )}
@@ -163,7 +158,7 @@ export const DownloadInvoiceButton = () => {
             )}
             {status === "downloaded" && (
               <>
-                <CheckCircle2 className="mr-3 h-6 w-6" /> 
+                <CheckCircle2 className="mr-3 h-6 w-6" />
                 Downloaded Successfully!
               </>
             )}
