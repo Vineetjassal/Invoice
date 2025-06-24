@@ -2,9 +2,6 @@
 
 This project provides a user-friendly invoice generation tool for freelancers, small businesses, and contractors. Create professional, customized invoices quickly and easily to ensure you get paid on time, every time.
 
-## ⛰️ Preview
-
-![806shots_so](https://github.com/pranavp10/invoice-generator/assets/49075129/403cffa1-b540-4d62-a9bd-c3c216802fe1)
 
 ## Key Features
 
