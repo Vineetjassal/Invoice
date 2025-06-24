@@ -38,12 +38,19 @@ export const DownloadInvoiceButton = () => {
   >("not-downloaded");
 
   const {
-    companyDetails = {},
-    invoiceDetails = {},
-    invoiceTerms = {},
-    paymentDetails = {},
-    yourDetails = {},
-  } = useData() || {};
+  companyDetails = {},
+  invoiceDetails = {},
+  invoiceTerms = {},
+  paymentDetails = {},
+  yourDetails = {},
+}: {
+  companyDetails?: any;
+  invoiceDetails?: any;
+  invoiceTerms?: any;
+  paymentDetails?: any;
+  yourDetails?: any;
+} = useData() || {};
+
 
   useEffect(() => {
     if (status === "downloaded") {
