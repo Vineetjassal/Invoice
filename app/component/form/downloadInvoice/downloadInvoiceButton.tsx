@@ -134,7 +134,7 @@ export const DownloadInvoiceButton = () => {
           
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Your Professional Invoice
-            <span className="block bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-gray-800 to-slate-700 bg-clip-text text-transparent">
               is Ready!
             </span>
           </h1>
