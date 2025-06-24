@@ -17,7 +17,7 @@ import { currencyList } from "@/lib/currency";
 import { svgToDataUri } from "@/lib/svgToDataUri";
 import { pdfContainers } from "@/lib/pdfStyles";
 
-// Register fonts
+// Font Registration
 Font.register({
   family: "Helvetica",
   fonts: [
@@ -32,25 +32,35 @@ Font.register({
   ],
 });
 
+// Define expected data shape (loose typing for flexibility)
+interface InvoiceData {
+  companyDetails?: Record<string, any>;
+  invoiceDetails?: {
+    currency?: string;
+    [key: string]: any;
+  };
+  invoiceTerms?: {
+    invoiceNumber?: string;
+    [key: string]: any;
+  };
+  paymentDetails?: Record<string, any>;
+  yourDetails?: Record<string, any>;
+}
+
 export const DownloadInvoiceButton = () => {
   const [status, setStatus] = useState<
     "downloaded" | "downloading" | "not-downloaded"
   >("not-downloaded");
 
-  const {
-  companyDetails = {},
-  invoiceDetails = {},
-  invoiceTerms = {},
-  paymentDetails = {},
-  yourDetails = {},
-}: {
-  companyDetails?: any;
-  invoiceDetails?: any;
-  invoiceTerms?: any;
-  paymentDetails?: any;
-  yourDetails?: any;
-} = useData() || {};
+  const data: InvoiceData = useData() || {};
 
+  const {
+    companyDetails = {},
+    invoiceDetails = {},
+    invoiceTerms = {},
+    paymentDetails = {},
+    yourDetails = {},
+  } = data;
 
   useEffect(() => {
     if (status === "downloaded") {
@@ -83,26 +93,22 @@ export const DownloadInvoiceButton = () => {
         console.warn("Flag image fetch failed:", err);
       }
 
-      const SafePdfDetails = () => (
-        <PdfDetails
-          companyDetails={companyDetails || {}}
-          invoiceDetails={invoiceDetails || {}}
-          invoiceTerms={invoiceTerms || {}}
-          paymentDetails={paymentDetails || {}}
-          yourDetails={yourDetails || {}}
-          countryImageUrl={countryImageUrl || ""}
-        />
-      );
-
       const blob = await pdf(
         <Document>
           <Page size="A4" style={pdfContainers.page}>
-            <SafePdfDetails />
+            <PdfDetails
+              companyDetails={companyDetails}
+              invoiceDetails={invoiceDetails}
+              invoiceTerms={invoiceTerms}
+              paymentDetails={paymentDetails}
+              yourDetails={yourDetails}
+              countryImageUrl={countryImageUrl}
+            />
           </Page>
         </Document>
       ).toBlob();
 
-      const invoiceNumber = invoiceTerms.invoiceNumber || "invoice";
+      const invoiceNumber = invoiceTerms?.invoiceNumber || "invoice";
       const timestamp = new Date().toISOString().split("T")[0];
       const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, "_")}_${timestamp}.pdf`;
 
