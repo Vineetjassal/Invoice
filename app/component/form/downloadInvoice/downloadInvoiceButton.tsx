@@ -172,7 +172,7 @@ export const DownloadInvoiceButton = () => {
             )}
           </Button>
 
-          <p className="text-sm text-gray-500 mb-8">
+          <p className="text-sm text-gray-500 mb-16">
             Your invoice will be downloaded as a PDF file
           </p>
         </div>
