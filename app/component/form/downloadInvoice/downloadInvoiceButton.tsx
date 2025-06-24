@@ -56,7 +56,7 @@ export const DownloadInvoiceButton = () => {
     try {
       setStatus("downloading");
 
-      const selectedCurrency = (invoiceDetails.currency || "INR").toLowerCase();
+      const selectedCurrency = (invoiceDetails?.currency ?? "INR").toLowerCase();
       const currencyDetails =
         currencyList.find((c) => c.value.toLowerCase() === selectedCurrency)
           ?.details ||
