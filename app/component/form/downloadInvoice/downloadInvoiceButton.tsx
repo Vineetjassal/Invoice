@@ -15,12 +15,30 @@ import {
   FileText,
 } from "lucide-react";
 
+// ✅ Define type for useData
+interface InvoiceData {
+  companyDetails?: Record<string, any>;
+  invoiceDetails?: {
+    currency?: string;
+    items?: any[];
+    [key: string]: any;
+  };
+  invoiceTerms?: {
+    invoiceNumber?: string;
+    [key: string]: any;
+  };
+  paymentDetails?: Record<string, any>;
+  yourDetails?: Record<string, any>;
+}
+
 export const DownloadInvoiceButton = () => {
   const [status, setStatus] = useState<
     "downloaded" | "downloading" | "not-downloaded"
   >("not-downloaded");
 
-  const data = useData() || {};
+  // ✅ Apply type to useData
+  const data: InvoiceData = useData() || {};
+
   const {
     companyDetails = {},
     invoiceTerms = {},
@@ -29,14 +47,14 @@ export const DownloadInvoiceButton = () => {
     invoiceDetails: rawInvoiceDetails = {},
   } = data;
 
-  // Ensure required `items` array exists in invoiceDetails
+  // ✅ Ensure invoiceDetails has `items`
   const invoiceDetails = {
     currency: "INR",
     items: [],
     ...rawInvoiceDetails,
   };
 
-  // Optional flag image — keeping empty for now
+  // ✅ Optional image (disabled for now)
   const countryImageUrl = "";
 
   useEffect(() => {
@@ -66,7 +84,9 @@ export const DownloadInvoiceButton = () => {
       );
 
       const blob = await pdf(doc).toBlob();
-      const invoiceNumber = invoiceTerms?.invoiceNumber || "invoice";
+
+      // ✅ Safely access invoiceNumber
+      const invoiceNumber = invoiceTerms?.invoiceNumber ?? "invoice";
       const timestamp = new Date().toISOString().split("T")[0];
       const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, "_")}_${timestamp}.pdf`;
 
