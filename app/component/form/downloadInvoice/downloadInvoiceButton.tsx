@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Document, Font, Page, pdf } from "@react-pdf/renderer";
+import { Document, Page, PDFViewer, StyleSheet } from "@react-pdf/renderer";
+import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import {
   CheckCircle2,
@@ -17,22 +18,6 @@ import { currencyList } from "@/lib/currency";
 import { svgToDataUri } from "@/lib/svgToDataUri";
 import { pdfContainers } from "@/lib/pdfStyles";
 
-// Font Registration
-Font.register({
-  family: "Helvetica",
-  fonts: [
-    {
-      src: "https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.woff2",
-      fontWeight: "normal",
-    },
-    {
-      src: "https://fonts.gstatic.com/s/opensans/v40/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4gaVc.woff2",
-      fontWeight: "bold",
-    },
-  ],
-});
-
-// Define expected data shape (loose typing for flexibility)
 interface InvoiceData {
   companyDetails?: Record<string, any>;
   invoiceDetails?: {
@@ -48,9 +33,7 @@ interface InvoiceData {
 }
 
 export const DownloadInvoiceButton = () => {
-  const [status, setStatus] = useState<
-    "downloaded" | "downloading" | "not-downloaded"
-  >("not-downloaded");
+  const [status, setStatus] = useState<"downloaded" | "downloading" | "not-downloaded">("not-downloaded");
 
   const data: InvoiceData = useData() || {};
 
@@ -75,16 +58,13 @@ export const DownloadInvoiceButton = () => {
 
       const selectedCurrency = (invoiceDetails?.currency ?? "INR").toLowerCase();
       const currencyDetails =
-        currencyList.find((c) => c.value.toLowerCase() === selectedCurrency)
-          ?.details ||
+        currencyList.find((c) => c.value.toLowerCase() === selectedCurrency)?.details ||
         currencyList.find((c) => c.value === "INR")?.details;
 
       let countryImageUrl = "";
 
       try {
-        const flagRes = await fetch(
-          `/flag/1x1/${currencyDetails?.iconName || "in"}.svg`
-        );
+        const flagRes = await fetch(`/flag/1x1/${currencyDetails?.iconName || "in"}.svg`);
         if (flagRes.ok) {
           const svgFlag = await flagRes.text();
           countryImageUrl = await svgToDataUri(svgFlag);
@@ -93,7 +73,7 @@ export const DownloadInvoiceButton = () => {
         console.warn("Flag image fetch failed:", err);
       }
 
-      const blob = await pdf(
+      const doc = (
         <Document>
           <Page size="A4" style={pdfContainers.page}>
             <PdfDetails
@@ -106,7 +86,9 @@ export const DownloadInvoiceButton = () => {
             />
           </Page>
         </Document>
-      ).toBlob();
+      );
+
+      const blob = await pdf(doc).toBlob();
 
       const invoiceNumber = invoiceTerms?.invoiceNumber || "invoice";
       const timestamp = new Date().toISOString().split("T")[0];
@@ -116,9 +98,7 @@ export const DownloadInvoiceButton = () => {
       setStatus("downloaded");
     } catch (error) {
       console.error("PDF generation failed:", error);
-      alert(
-        "Something went wrong while generating your invoice. Please try again."
-      );
+      alert("Something went wrong while generating your invoice. Please try again.");
       setStatus("not-downloaded");
     }
   };
