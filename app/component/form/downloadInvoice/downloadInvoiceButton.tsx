@@ -1,20 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Document, Page, pdf } from "@react-pdf/renderer";
-import { saveAs } from "file-saver";
+import { Document, Page, StyleSheet, pdf } from "@react-pdf/renderer";
 import { CheckCircle2, Download, LoaderIcon } from "lucide-react";
+import { saveAs } from "file-saver";
 import { useData } from "@/app/hooks/useData";
-import { pdfContainers } from "@/lib/pdfStyles";
-import { svgToDataUri } from "@/lib/svgToDataUri";
-import { currencyList } from "@/lib/currency";
 import { PdfDetails } from "../pdfDetails";
+import { currencyList } from "@/lib/currency";
+import { svgToDataUri } from "@/lib/svgToDataUri";
 
-const MyPDFDocument = (props: any) => (
+const styles = StyleSheet.create({
+  page: {
+    padding: 30,
+    fontSize: 12,
+    fontFamily: "Helvetica",
+  },
+});
+
+const MyPDFDocument = ({
+  companyDetails,
+  invoiceDetails,
+  invoiceTerms,
+  paymentDetails,
+  yourDetails,
+  countryImageUrl,
+}: any) => (
   <Document>
-    <Page size="A4" style={pdfContainers.page}>
-      <PdfDetails {...props} />
+    <Page size="A4" style={styles.page}>
+      <PdfDetails
+        companyDetails={companyDetails}
+        invoiceDetails={invoiceDetails}
+        invoiceTerms={invoiceTerms}
+        paymentDetails={paymentDetails}
+        yourDetails={yourDetails}
+        countryImageUrl={countryImageUrl}
+      />
     </Page>
   </Document>
 );
@@ -34,7 +55,8 @@ export const DownloadInvoiceButton = () => {
 
   useEffect(() => {
     if (status === "downloaded") {
-      setTimeout(() => setStatus("not-downloaded"), 1000);
+      const timer = setTimeout(() => setStatus("not-downloaded"), 1500);
+      return () => clearTimeout(timer);
     }
   }, [status]);
 
@@ -42,22 +64,22 @@ export const DownloadInvoiceButton = () => {
     try {
       setStatus("downloading");
 
+      // Get currency flag
       const currencyDetails = currencyList.find(
-        (c) =>
-          c.value.toLowerCase() === invoiceDetails.currency.toLowerCase()
+        (c) => c.value.toLowerCase() === invoiceDetails.currency.toLowerCase()
       )?.details;
 
       const defaultCurrency = currencyList.find(
         (c) => c.value.toLowerCase() === "inr"
       )?.details;
 
-      const response = await fetch(
+      const flagRes = await fetch(
         `/flag/1x1/${currencyDetails?.iconName || defaultCurrency?.iconName}.svg`
       );
+      const svg = await flagRes.text();
+      const flagDataUri = await svgToDataUri(svg);
 
-      const svgFlag = await response.text();
-      const countryImageUrl = await svgToDataUri(svgFlag);
-
+      // Generate PDF
       const blob = await pdf(
         <MyPDFDocument
           companyDetails={companyDetails}
@@ -65,29 +87,28 @@ export const DownloadInvoiceButton = () => {
           invoiceTerms={invoiceTerms}
           paymentDetails={paymentDetails}
           yourDetails={yourDetails}
-          countryImageUrl={countryImageUrl}
+          countryImageUrl={flagDataUri}
         />
       ).toBlob();
 
       saveAs(blob, "invoice.pdf");
       setStatus("downloaded");
     } catch (error) {
-      console.error("Download error:", error);
+      console.error("Error downloading invoice:", error);
       setStatus("not-downloaded");
     }
   };
 
   return (
     <div className="flex h-[calc(100vh-208px)] justify-center items-center">
-      <div>
+      <div className="text-center max-w-xl">
         <h1 className="text-5xl font-semibold pb-6">Your invoice is ready</h1>
         <p className="text-neutral-500 text-xl pb-7">
           Please review the details carefully before downloading your invoice.
         </p>
         <Button
-          disabled={status === "downloading"}
           onClick={handleDownload}
-          type="button"
+          disabled={status === "downloading"}
           className="w-full h-12 rounded-lg text-lg"
         >
           {status === "not-downloaded" && (
@@ -97,7 +118,8 @@ export const DownloadInvoiceButton = () => {
           )}
           {status === "downloading" && (
             <>
-              <LoaderIcon className="mr-2 h-6 w-6 animate-spin" /> Downloading...
+              <LoaderIcon className="mr-2 h-6 w-6 animate-spin" />
+              Downloading...
             </>
           )}
           {status === "downloaded" && (
@@ -110,3 +132,4 @@ export const DownloadInvoiceButton = () => {
     </div>
   );
 };
+
