@@ -6,13 +6,19 @@ import { saveAs } from "file-saver";
 import { Button } from "@/components/ui/button";
 import { useData } from "@/app/hooks/useData";
 import { PdfDetails } from "../pdfDetails";
-import { CheckCircle2, Download, LoaderIcon, Sparkles, FileText } from "lucide-react";
-import { currencyList } from "@/lib/currency";
-import { svgToDataUri } from "@/lib/svgToDataUri";
 import { pdfContainers } from "@/lib/pdfStyles";
+import {
+  CheckCircle2,
+  Download,
+  LoaderIcon,
+  Sparkles,
+  FileText,
+} from "lucide-react";
 
 export const DownloadInvoiceButton = () => {
-  const [status, setStatus] = useState<"downloaded" | "downloading" | "not-downloaded">("not-downloaded");
+  const [status, setStatus] = useState<
+    "downloaded" | "downloading" | "not-downloaded"
+  >("not-downloaded");
 
   const data = useData() || {};
   const {
@@ -20,14 +26,18 @@ export const DownloadInvoiceButton = () => {
     invoiceTerms = {},
     paymentDetails = {},
     yourDetails = {},
+    invoiceDetails: rawInvoiceDetails = {},
   } = data;
 
-  // Ensure invoiceDetails includes 'items'
+  // Ensure required `items` array exists in invoiceDetails
   const invoiceDetails = {
     currency: "INR",
     items: [],
-    ...data.invoiceDetails,
+    ...rawInvoiceDetails,
   };
+
+  // Optional flag image — keeping empty for now
+  const countryImageUrl = "";
 
   useEffect(() => {
     if (status === "downloaded") {
@@ -40,23 +50,6 @@ export const DownloadInvoiceButton = () => {
     try {
       setStatus("downloading");
 
-      const selectedCurrency = (invoiceDetails?.currency ?? "INR").toLowerCase();
-      const currencyDetails =
-        currencyList.find((c) => c.value.toLowerCase() === selectedCurrency)?.details ||
-        currencyList.find((c) => c.value === "INR")?.details;
-
-      let countryImageUrl = "";
-      try {
-        const flagRes = await fetch(`/flag/1x1/${currencyDetails?.iconName || "in"}.svg`);
-        if (flagRes.ok) {
-          const svgFlag = await flagRes.text();
-          countryImageUrl = await svgToDataUri(svgFlag);
-        }
-      } catch (err) {
-        console.warn("Flag fetch failed:", err);
-      }
-
-      // Create PDF Blob
       const doc = (
         <Document>
           <Page size="A4" style={pdfContainers.page}>
@@ -73,16 +66,15 @@ export const DownloadInvoiceButton = () => {
       );
 
       const blob = await pdf(doc).toBlob();
-
       const invoiceNumber = invoiceTerms?.invoiceNumber || "invoice";
       const timestamp = new Date().toISOString().split("T")[0];
       const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, "_")}_${timestamp}.pdf`;
 
       saveAs(blob, filename);
       setStatus("downloaded");
-    } catch (error) {
-      console.error("PDF generation failed:", error);
-      alert("Failed to generate PDF. Try again.");
+    } catch (err) {
+      console.error("PDF generation failed", err);
+      alert("Failed to generate PDF. Please try again.");
       setStatus("not-downloaded");
     }
   };
