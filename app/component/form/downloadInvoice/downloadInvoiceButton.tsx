@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Document, Page, pdf } from "@react-pdf/renderer";
+import { useEffect, useState } from "react";
+import { Document, Page, Font, pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import { Button } from "@/components/ui/button";
 import { useData } from "@/app/hooks/useData";
 import { PdfDetails } from "../pdfDetails";
 import { pdfContainers } from "@/lib/pdfStyles";
+import { svgToDataUri } from "@/lib/svgToDataUri";
+import { currencyList } from "@/lib/currency";
+
 import {
   CheckCircle2,
   Download,
@@ -15,47 +18,32 @@ import {
   FileText,
 } from "lucide-react";
 
-// ✅ Define type for useData
-interface InvoiceData {
-  companyDetails?: Record<string, any>;
-  invoiceDetails?: {
-    currency?: string;
-    items?: any[];
-    [key: string]: any;
-  };
-  invoiceTerms?: {
-    invoiceNumber?: string;
-    [key: string]: any;
-  };
-  paymentDetails?: Record<string, any>;
-  yourDetails?: Record<string, any>;
-}
+Font.register({
+  family: "Geist",
+  fonts: [
+    { src: "/font/Geist-Thin.ttf", fontWeight: "thin" },
+    { src: "/font/Geist-Ultralight.ttf", fontWeight: "ultralight" },
+    { src: "/font/Geist-Light.ttf", fontWeight: "light" },
+    { src: "/font/Geist-Regular.ttf", fontWeight: "normal" },
+    { src: "/font/Geist-Medium.ttf", fontWeight: "medium" },
+    { src: "/font/Geist-SemiBold.ttf", fontWeight: "semibold" },
+    { src: "/font/Geist-Bold.ttf", fontWeight: "bold" },
+    { src: "/font/Geist-UltraBlack.ttf", fontWeight: "ultrabold" },
+  ],
+});
 
 export const DownloadInvoiceButton = () => {
   const [status, setStatus] = useState<
     "downloaded" | "downloading" | "not-downloaded"
   >("not-downloaded");
 
-  // ✅ Apply type to useData
-  const data: InvoiceData = useData() || {};
-
   const {
-    companyDetails = {},
-    invoiceTerms = {},
-    paymentDetails = {},
-    yourDetails = {},
-    invoiceDetails: rawInvoiceDetails = {},
-  } = data;
-
-  // ✅ Ensure invoiceDetails has `items`
-  const invoiceDetails = {
-    currency: "INR",
-    items: [],
-    ...rawInvoiceDetails,
-  };
-
-  // ✅ Optional image (disabled for now)
-  const countryImageUrl = "";
+    companyDetails,
+    invoiceDetails,
+    invoiceTerms,
+    paymentDetails,
+    yourDetails,
+  } = useData();
 
   useEffect(() => {
     if (status === "downloaded") {
@@ -64,11 +52,27 @@ export const DownloadInvoiceButton = () => {
     }
   }, [status]);
 
-  const generatePDF = async () => {
+  const handleDownload = async () => {
     try {
       setStatus("downloading");
 
-      const doc = (
+      const currencyDetails = currencyList.find(
+        (currencyDetail) =>
+          currencyDetail.value.toLowerCase() ===
+          invoiceDetails?.currency?.toLowerCase()
+      )?.details;
+
+      const defaultCurrency = currencyList.find(
+        (c) => c.value.toLowerCase() === "inr"
+      )?.details;
+
+      const res = await fetch(
+        `/flag/1x1/${currencyDetails?.iconName || defaultCurrency?.iconName}.svg`
+      );
+      const svgFlag = await res.text();
+      const countryImageUrl = await svgToDataUri(svgFlag);
+
+      const blob = await pdf(
         <Document>
           <Page size="A4" style={pdfContainers.page}>
             <PdfDetails
@@ -81,20 +85,16 @@ export const DownloadInvoiceButton = () => {
             />
           </Page>
         </Document>
-      );
+      ).toBlob();
 
-      const blob = await pdf(doc).toBlob();
-
-      // ✅ Safely access invoiceNumber
       const invoiceNumber = invoiceTerms?.invoiceNumber ?? "invoice";
       const timestamp = new Date().toISOString().split("T")[0];
       const filename = `${invoiceNumber.replace(/[^a-zA-Z0-9]/g, "_")}_${timestamp}.pdf`;
 
       saveAs(blob, filename);
       setStatus("downloaded");
-    } catch (err) {
-      console.error("PDF generation failed", err);
-      alert("Failed to generate PDF. Please try again.");
+    } catch (e) {
+      console.error("PDF download failed", e);
       setStatus("not-downloaded");
     }
   };
@@ -131,7 +131,7 @@ export const DownloadInvoiceButton = () => {
         <div className="space-y-4">
           <Button
             disabled={status === "downloading"}
-            onClick={generatePDF}
+            onClick={handleDownload}
             type="button"
             className="w-full max-w-md h-14 rounded-xl text-lg font-bold bg-gradient-to-r from-gray-800 to-slate-700 hover:from-gray-900 hover:to-slate-800 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl"
           >
