@@ -23,8 +23,8 @@ This project provides a user-friendly invoice generation tool for freelancers, s
 Ensure that you have Bun installed.
 
 ```bash
-git clone https://github.com/pranavp10/invoice-generator.git
-cd invoice-generator
+git clone https://github.com/Vineetjassal/Invoice.git
+cd Invoice
 bun install
 bun run dev
 ```
