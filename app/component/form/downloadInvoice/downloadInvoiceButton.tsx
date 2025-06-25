@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Document, Page, PDFViewer, StyleSheet } from "@react-pdf/renderer";
-import { pdf } from "@react-pdf/renderer";
+import { Document, Page, pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import {
   CheckCircle2,
@@ -18,10 +17,12 @@ import { currencyList } from "@/lib/currency";
 import { svgToDataUri } from "@/lib/svgToDataUri";
 import { pdfContainers } from "@/lib/pdfStyles";
 
+// Define expected data shape (loose typing for flexibility)
 interface InvoiceData {
   companyDetails?: Record<string, any>;
   invoiceDetails?: {
     currency?: string;
+    items?: any[]; // Ensure items field exists
     [key: string]: any;
   };
   invoiceTerms?: {
@@ -39,11 +40,17 @@ export const DownloadInvoiceButton = () => {
 
   const {
     companyDetails = {},
-    invoiceDetails = {},
     invoiceTerms = {},
     paymentDetails = {},
     yourDetails = {},
   } = data;
+
+  // Ensure invoiceDetails has default shape with required `items`
+  const invoiceDetails = {
+    currency: "INR",
+    items: [],
+    ...data.invoiceDetails,
+  };
 
   useEffect(() => {
     if (status === "downloaded") {
@@ -167,3 +174,4 @@ export const DownloadInvoiceButton = () => {
     </div>
   );
 };
+
